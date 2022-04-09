@@ -5,9 +5,12 @@
     "watch": true,                               
     "skipLibCheck": true,
     "rootDir": "./src",
-    "outDir": "./build"                
+    "outDir": "./build",
+    "strict": true,
+    "lib": ["esnext"],
+    "esModuleInterop": true                
   },
   "exclude": [
     "node_modules"
-]         
+  ]         
 }

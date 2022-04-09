@@ -10,19 +10,44 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+generator erd {
+  provider = "prisma-erd-generator"
+}
+
 
 model User{
   id Int @id @default(autoincrement())
   username String
   password String
+  todos Todo[]
+  notes Note[]
+}
+
+model Todo{
+  id Int @id @default(autoincrement())
+  userId Int 
+  user User @relation(fields: [userId],references: [id])
+  completed Boolean @default(false)
+  title String
   tasks Task[]
+  description String
+  dueDate DateTime 
+  createdDate DateTime @default(now())
 }
 
 model Task{
   id Int @id @default(autoincrement())
-  userId Int 
-  user User @relation(fields: [userId], references: [id])
-  completed Boolean @default(false)
-  title String
-  
+  todoID Int
+  todo Todo @relation(fields: [todoID],references: [id])
+  createdDate DateTime @default(now())
 }
+
+model Note{
+  id Int @id @default(autoincrement())
+  userId Int 
+  user User @relation(fields: [userId],references: [id])
+  title String
+  text String
+  createdDate DateTime @default(now())
+}
+
