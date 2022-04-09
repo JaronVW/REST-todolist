@@ -13,4 +13,19 @@ router.get('/', async(req: any,res: any)=>{
     res.json(users)
 });
 
+
+router.post('/', async(req: any,res: any)=>{
+    const {username} = req.body;
+    
+    const userExists = await user.findUnique({
+        where:{
+            username
+        },select: {
+            username: true
+        }
+    })
+
+});
+
+
 module.exports = router;
