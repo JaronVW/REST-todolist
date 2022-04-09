@@ -8,7 +8,7 @@
     "outDir": "./build",
     "strict": true,
     "lib": ["esnext"],
-    "esModuleInterop": true                
+    "esModuleInterop": true            
   },
   "exclude": [
     "node_modules"

@@ -1,10 +1,15 @@
-import express = require('express')
-import { start } from 'repl'
 
-const app = express()
+import express from 'express';
+const app = express();
 
-const port: number = 3000
+const port = 3000;
+app.get('/', (req: any, res: any) => {
+  res.send("<h1> Prisma API</h1>")
+})
 
-app.listen(port,() => {
-    console.log(`started on http://localhost:${port}`)
+
+app.use('/api/user', require('./routes/user'));
+
+app.listen(port, () => {
+  console.log(`app live on http://localhost:${port}`)
 })
