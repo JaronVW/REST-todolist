@@ -1,9 +1,8 @@
 import { PrismaClient } from "@prisma/client";
 const router = require("express").Router();
 import { check, validationResult } from "express-validator";
+import bcrypt from "bcrypt";
 const { user } = new PrismaClient();
-
-
 
 router.get("/", async (req: any, res: any) => {
   const users = await user.findMany({
@@ -16,21 +15,19 @@ router.get("/", async (req: any, res: any) => {
 });
 
 
-
-router.post(
-  "/",
-  [    
-    check("username","username must be at least six characters").isLength({
-        min: 6,
+router.post("/signup",
+  [
+    check("username", "username must be at least four characters").isLength({
+      min: 4,
     }),
     check("password", "Password must be at least six characters").isLength({
       min: 6,
     }),
-
   ],
   async (req: any, res: any) => {
     const errors = validationResult(req);
     const { username, password } = req.body;
+    const passwordHashed = await bcrypt.hash(password,10);
 
     if (!errors.isEmpty()) {
       return res.status(400).json({
@@ -45,12 +42,12 @@ router.post(
       update: {},
       create: {
         username,
-        password,
+        password: passwordHashed,
       },
     });
     return res.json({
-        "response": 200,
-        "message": "user added"
+      response: 200,
+      message: "User added",
     });
   }
 );
