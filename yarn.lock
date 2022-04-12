@@ -80,6 +80,11 @@
     chalk "4.1.2"
     cross-spawn "7.0.3"
 
+"@prisma/studio-types@^0.426.0":
+  version "0.426.0"
+  resolved "https://registry.yarnpkg.com/@prisma/studio-types/-/studio-types-0.426.0.tgz#376dfdce8f5a45c8e9ea3f18eae59f1359a0c0e6"
+  integrity sha512-CyksOoYLX8XKIt0aIUsCPMPZJ1RveyoJLSGWxa6d4Kn28hT3sacxGFOg3M+VHF6RnPpNbHC4KHMjfiY2gOJqZw==
+
 "@sindresorhus/is@^0.14.0":
   version "0.14.0"
   resolved "https://registry.yarnpkg.com/@sindresorhus/is/-/is-0.14.0.tgz#9fb3a3cf3132328151f353de4632e01e52102bea"

@@ -10,7 +10,8 @@ app.get('/', (req: any, res: any) => {
 })
 
 
-app.use('/api/user', require('./routes/user'));
+app.use('/api/users', require('./routes/user'));
+app.use('/api/notes', require('./routes/note'));
 
 app.listen(port, () => {
   console.log(`app live on http://localhost:${port}`)

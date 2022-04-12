@@ -14,8 +14,8 @@ router.get("/", async (req: any, res: any) => {
   res.json(users);
 });
 
-
-router.post("/signup",
+router.post(
+  "/signup",
   [
     check("username", "username must be at least four characters").isLength({
       min: 4,
@@ -27,7 +27,7 @@ router.post("/signup",
   async (req: any, res: any) => {
     const errors = validationResult(req);
     const { username, password } = req.body;
-    const passwordHashed = await bcrypt.hash(password,10);
+    const passwordHashed = await bcrypt.hash(password, 10);
 
     if (!errors.isEmpty()) {
       return res.status(400).json({
@@ -35,7 +35,22 @@ router.post("/signup",
       });
     }
 
-    const addUserIfNotExists = await user.upsert({
+    const userExists = await user.findUnique({
+      where: { username },
+      select: {
+        id: true,
+        username: true,
+      },
+    });
+
+    if (userExists) {
+      res.json({
+        response: 400,
+        message: "User already exists",
+      });
+    }
+
+    await user.upsert({
       where: {
         username,
       },
