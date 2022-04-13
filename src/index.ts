@@ -4,7 +4,7 @@ const app = express();
 app.use(express.json());
 
 
-const port = 5000;
+const port = 3000;
 app.get('/', (req: any, res: any) => {
   res.send("<h1> Prisma API</h1>")
 })

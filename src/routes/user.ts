@@ -2,8 +2,8 @@ import { PrismaClient } from "@prisma/client";
 const router = require("express").Router();
 import { check, validationResult } from "express-validator";
 import bcrypt from "bcrypt";
-import { json } from "stream/consumers";
 const { user } = new PrismaClient();
+
 
 router.get("/", async (req: any, res: any) => {
   try {
