@@ -21,6 +21,9 @@ model User{
   password String
   todos Todo[]
   notes Note[]
+
+  @@index([id])
+  @@index([username,password])
 }
 
 model Todo{
@@ -31,8 +34,10 @@ model Todo{
   title String
   tasks Task[]
   description String
-  dueDate DateTime 
+  dueDate DateTime?
   createdDate DateTime @default(now())
+
+  @@index([id])
 }
 
 model Task{
@@ -40,6 +45,8 @@ model Task{
   todoID Int
   todo Todo @relation(fields: [todoID],references: [id])
   createdDate DateTime @default(now())
+
+  @@index([id])
 }
 
 model Note{
@@ -49,5 +56,7 @@ model Note{
   title String
   text String
   createdDate DateTime @default(now())
+
+  @@index([id])
 }
 
