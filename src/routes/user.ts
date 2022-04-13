@@ -2,16 +2,24 @@ import { PrismaClient } from "@prisma/client";
 const router = require("express").Router();
 import { check, validationResult } from "express-validator";
 import bcrypt from "bcrypt";
+import { json } from "stream/consumers";
 const { user } = new PrismaClient();
 
 router.get("/", async (req: any, res: any) => {
-  const users = await user.findMany({
-    select: {
-      id: true,
-      username: true,
-    },
-  });
-  res.json(users);
+  try {
+    const users = await user.findMany({
+      select: {
+        id: true,
+        username: true,
+      },
+    });
+    res.json(users);
+  } catch {
+    return res.json({
+      response: 400,
+      message: "Something went wrong with the request",
+    });
+  }
 });
 
 router.post(
@@ -25,45 +33,52 @@ router.post(
     }),
   ],
   async (req: any, res: any) => {
-    const errors = validationResult(req);
-    const { username, password } = req.body;
-    const passwordHashed = await bcrypt.hash(password, 10);
+    try {
+      const errors = validationResult(req);
+      const { username, password } = req.body;
+      const passwordHashed = await bcrypt.hash(password, 10);
 
-    if (!errors.isEmpty()) {
-      return res.status(400).json({
-        errors: errors.array(),
+      if (!errors.isEmpty()) {
+        return res.status(400).json({
+          errors: errors.array(),
+        });
+      }
+
+      const userExists = await user.findUnique({
+        where: { username },
+        select: {
+          id: true,
+          username: true,
+        },
       });
-    }
 
-    const userExists = await user.findUnique({
-      where: { username },
-      select: {
-        id: true,
-        username: true,
-      },
-    });
+      if (userExists) {
+        res.json({
+          response: 400,
+          message: "User already exists",
+        });
+      }
 
-    if (userExists) {
-      res.json({
+      await user.upsert({
+        where: {
+          username,
+        },
+        update: {},
+        create: {
+          username,
+          password: passwordHashed,
+        },
+      });
+      return res.json({
+        response: 200,
+        message: "User added",
+      });
+    } catch {
+      return res.json({
         response: 400,
-        message: "User already exists",
+        message: "Something went wrong with the request",
       });
     }
-
-    await user.upsert({
-      where: {
-        username,
-      },
-      update: {},
-      create: {
-        username,
-        password: passwordHashed,
-      },
-    });
-    return res.json({
-      response: 200,
-      message: "User added",
-    });
   }
 );
 
