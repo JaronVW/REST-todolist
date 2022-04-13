@@ -1,5 +1,5 @@
 node_modules
 /build
 .env
-/db/database.db
-/db/database.db-journal
+/db
+/.vscode
