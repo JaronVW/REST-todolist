@@ -38,6 +38,8 @@ model Task{
   id Int @id @default(autoincrement())
   todoID Int
   todo Todo @relation(fields: [todoID],references: [id])
+  text String
+  completed Boolean @default(false)
   createdDate DateTime @default(now())
 
   @@index([id])

@@ -4,12 +4,10 @@ const router = require("express").Router();
 const { note } = new PrismaClient();
 
 router.post("/", async (req: any, res: any) => {
-
   try {
-
     const { userId, title, text } = req.body;
 
-    const createNote = await note.create({
+    await note.create({
       data: {
         userId,
         title,
@@ -20,21 +18,17 @@ router.post("/", async (req: any, res: any) => {
       response: 200,
       message: "Note added",
     });
-
   } catch {
     return res.json({
       response: 400,
       message: "Something went wrong with the request",
     });
   }
-
 });
 
 router.get("/", async (req: any, res: any) => {
-
   try {
-
-    const userId = +req.query.userid;
+    const userId = +req.query.id;
 
     if (!userId) {
       return res.json({
@@ -56,26 +50,21 @@ router.get("/", async (req: any, res: any) => {
       },
     });
     res.json(users);
-
   } catch {
     return res.json({
       response: 400,
       message: "Something went wrong with the request",
     });
   }
-
 });
 
 router.put("/edit", async (req: any, res: any) => {
-
   try {
-
     const id = +req.query.id;
     const { title, text } = req.body;
 
     if (!id) {
-      return res.json({
-        response: 400,
+      return res.status(400).send({
         message: "Missing id query",
       });
     }
@@ -89,18 +78,39 @@ router.put("/edit", async (req: any, res: any) => {
         text,
       },
     });
-    return res.json({
-      response: 200,
-      message: "Note updated",
+    return res.status(200).send({
+      message: "note edited",
     });
-
   } catch {
-    return res.json({
-      response: 400,
-      message: "Something went wrong with the request",
+    return res.status(400).send({
+      message: "Something went wrong",
     });
   }
+});
 
+router.delete("/delete", async (req: any, res: any) => {
+  try {
+    const id = +req.query.id;
+
+    if (!id) {
+      return res.status(400).send({
+        message: "Missing id query",
+      });
+    }
+
+    await note.delete({
+      where: {
+        id,
+      },
+    });
+    return res.status(200).send({
+      message: "note deleted",
+    });
+  } catch {
+    return res.status(400).send({
+      message: "Something went wrong",
+    });
+  }
 });
 
 module.exports = router;
